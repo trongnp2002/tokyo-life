@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/tokyo_life
+    username: root
+    password: 12345678
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org:
+      hibernate: ERROR
+
+server:
+  port: 5357
+
+jwt:
+    my-secret-key: "ADONIS_2002@"
+    expired: 86400
+    name: "Bearer"
+
+error:
+  status:
+    success: "MSG_SUCCESS"
+    created: "MSG_CREATED"
+    bad-request: "MSG_INVALID_INPUT"
+    access-denied: "MSG_FORBIDDEN "
+    internal-error: "MSG_INTERNAL_ERROR"
+    unathorized: "MSG_UNAUTHORIZED"
+    not-found: "MSG_NOT_FOUND"
+    unavailable: "MSG_SERVICE_UNAVAILABLE "
+  message:
+    success: "Lấy dữ liệu thành công."
+    created: "Tài nguyên mới đã được tạo thành công."
+    bad-request: "Yêu cầu không hợp lệ. Vui lòng kiểm tra lại dữ liệu đầu vào."
+    access-denied: "Từ chối truy cập: Bạn không có quyền truy cập tài nguyên này."
+    internal-error: "Có lỗi xảy ra trên máy chủ. Vui lòng thử lại sau."
+    unathorized: "Cần đăng nhập hoặc không có quyền truy cập: Vui lòng đăng nhập hoặc kiểm tra quyền truy cập của bạn."
+    not-found: "Tài nguyên không được tìm thấy."
+    unavailable: " Dịch vụ không khả dụng, máy chủ không thể xử lý yêu cầu."

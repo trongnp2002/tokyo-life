@@ -11,9 +11,7 @@ import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +19,10 @@ public class UserMapper {
     private final AddressRepository addressRepository;
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
+
     public UserDTO toUserDTO (UsersEntity usersEntity, AddressEntity addressEntity){
+        List<String> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
                 .UUID(usersEntity.getUuid().toString())
@@ -31,13 +32,18 @@ public class UserMapper {
                 .firstName(addressEntity.getFirstName())
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
+                .roles(roles)
                 .token(null)
                 .build();
     }
 
-    public UserDTO toUserDTO (UsersEntity usersEntity, AddressEntity addressEntity, String token){
+    public UserDTO toUserDTO (UsersEntity usersEntity, String token){
+        AddressEntity addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId()).get();
+        List<String> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
+                .roles(roles)
                 .UUID(usersEntity.getUuid().toString())
                 .country(addressEntity.getCountry())
                 .address(addressEntity.getDeliveryAddress())
@@ -50,6 +56,9 @@ public class UserMapper {
     }
     public UserDTO toUserDTO (UsersEntity usersEntity){
         AddressEntity addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId()).get();
+        List<String> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
+
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
                 .UUID(usersEntity.getUuid().toString())
@@ -59,6 +68,7 @@ public class UserMapper {
                 .firstName(addressEntity.getFirstName())
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
+                .roles(roles)
                 .token(null)
                 .build();
     }

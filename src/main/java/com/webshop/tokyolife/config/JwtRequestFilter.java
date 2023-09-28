@@ -2,7 +2,6 @@ package com.webshop.tokyolife.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webshop.tokyolife.dto.user.TokenPayload;
-import com.webshop.tokyolife.exception.custom.CustomUnauthorizedException;
 import com.webshop.tokyolife.model.CustomError;
 import com.webshop.tokyolife.model.UsersEntity;
 import com.webshop.tokyolife.repository.UserRepository;
@@ -17,8 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -64,7 +61,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         if(tokenPayload != null && SecurityContextHolder.getContext().getAuthentication() == null){
             Optional<UsersEntity> usersEntityOptional  = userRepository.findByEmail(tokenPayload.getEmail());
-            System.out.println(tokenPayload.getUuid());
             if(usersEntityOptional.isPresent()){
                 UsersEntity usersEntity = usersEntityOptional.get();
                 if(jwtTokenUtils.validate(token, usersEntity)){

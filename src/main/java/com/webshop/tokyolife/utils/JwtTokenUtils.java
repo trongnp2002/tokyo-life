@@ -3,7 +3,6 @@ package com.webshop.tokyolife.utils;
 import com.webshop.tokyolife.dto.user.TokenPayload;
 import com.webshop.tokyolife.model.UsersEntity;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -31,6 +29,7 @@ public class JwtTokenUtils {
         claims.put(name,tokenPayload);
         Long issuedAt = System.currentTimeMillis();
         return Jwts.builder().setClaims(claims)
+                .claim("roles",usersEntity.getRoles().toString())
                 .setIssuedAt(new Date(issuedAt))
                 .setExpiration( new Date(issuedAt+expiredDate*1000))
                 .signWith(SignatureAlgorithm.HS512, Base64.encodeBase64(secretKey.getBytes()))
@@ -55,9 +54,6 @@ public class JwtTokenUtils {
 
     public boolean validate(String token, UsersEntity usersEntity) {
         Date expiredDate = getClaimsFromToken(token, Claims::getExpiration);
-        System.out.println(expiredDate);
-        System.out.println(new Date());
-        boolean hethan = expiredDate.after(new Date());
-        return hethan;
+        return expiredDate.after(new Date());
     }
 }

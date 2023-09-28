@@ -43,12 +43,11 @@ public class UsersEntity extends BaseEntity implements Serializable{
     private Boolean enable;
 
     @PrePersist
-    public void prePersist() {
+    public void prePersistUUID() {
         if (uuid == null) {
             uuid = UUID.randomUUID();
         }
     }
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude

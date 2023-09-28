@@ -31,6 +31,6 @@ public class AuthController extends BaseController{
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO.Register registerRequestDTO) throws Exception {
 
-        return response(new ResponseDTO(200,successStatus,"Đăng kí tài khoản thành công",authService.register(registerRequestDTO)));
+        return response(new ResponseDTO(201,createSuccessStatus,"Đăng kí tài khoản thành công",authService.register(registerRequestDTO)));
     }
 }

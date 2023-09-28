@@ -2,6 +2,7 @@ package com.webshop.tokyolife.service.impl;
 
 import com.webshop.tokyolife.dto.user.UserDTO;
 import com.webshop.tokyolife.dto.user.UserMapper;
+import com.webshop.tokyolife.exception.custom.CustomAccessDeniedException;
 import com.webshop.tokyolife.exception.custom.CustomBadRequestException;
 import com.webshop.tokyolife.exception.custom.CustomNotFoundException;
 import com.webshop.tokyolife.model.AddressEntity;
@@ -14,8 +15,8 @@ import com.webshop.tokyolife.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
+
     @Override
     public UserDTO login(UserDTO.Login userLogin) throws CustomNotFoundException {
         Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(userLogin.getEmail());
@@ -36,16 +38,15 @@ public class AuthServiceImpl implements AuthService {
                 throw new CustomNotFoundException(new CustomError("MSG_LOGIN_FAIL","Tài khoản hoặc mật khẩu không chính xác"));
             }
             if(usersEntity.getLocked()){
-
+                throw new CustomAccessDeniedException(new CustomError("MSG_LOGIN_FAIL","Tài khoản của bạn đã bị khóa do vượt quá số lần thử mật khẩu, vui lòng thử lại sau 24h"));
             }
-            Optional<AddressEntity> addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId());
-            return userMapper.toUserDTO(usersEntity,addressEntity.get(),jwtTokenUtils.generateToken(usersEntity));
+            return userMapper.toUserDTO(usersEntity,jwtTokenUtils.generateToken(usersEntity));
         }
         throw new CustomNotFoundException(new CustomError("MSG_LOGIN_FAIL","Tài khoản hoặc mật khẩu không chính xác"));
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserDTO register(UserDTO.Register registerRequestDTO) throws CustomBadRequestException {
         Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(registerRequestDTO.getEmail());
         if(usersEntityOptional.isPresent()){

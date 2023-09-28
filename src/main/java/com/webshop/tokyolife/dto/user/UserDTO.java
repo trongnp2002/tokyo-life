@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,6 +30,7 @@ public class UserDTO {
     private String phone;
     private String token;
     private String country;
+    private List<String> roles;
 
     @Getter
     @AllArgsConstructor

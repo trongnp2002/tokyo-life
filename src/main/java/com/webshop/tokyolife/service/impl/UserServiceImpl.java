@@ -3,10 +3,8 @@ package com.webshop.tokyolife.service.impl;
 import com.webshop.tokyolife.dto.user.UserDTO;
 import com.webshop.tokyolife.dto.user.UserMapper;
 import com.webshop.tokyolife.helps.SecurityHepler;
-import com.webshop.tokyolife.model.AddressEntity;
 import com.webshop.tokyolife.model.UsersEntity;
 import com.webshop.tokyolife.repository.UserRepository;
-import com.webshop.tokyolife.service.AuthService;
 import com.webshop.tokyolife.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +22,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO getCurrentUser() {
         String email = SecurityHepler.getCurrentUsername();
-        if(email != null){
+        if (email != null) {
             Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(email);
-            if(usersEntityOptional.isPresent()){
+            if (usersEntityOptional.isPresent()) {
                 return userMapper.toUserDTO(usersEntityOptional.get());
             }
         }

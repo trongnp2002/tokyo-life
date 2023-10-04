@@ -8,6 +8,7 @@ import com.webshop.tokyolife.repository.AddressRepository;
 import com.webshop.tokyolife.repository.RolesRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,8 @@ public class UserMapper {
     private final AddressRepository addressRepository;
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
-
+    @Value("${jwt.name}")
+    private String tokenType;
     public UserDTO toUserDTO (UsersEntity usersEntity, AddressEntity addressEntity){
         List<String> roles = new ArrayList<>();
         usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
@@ -52,6 +54,7 @@ public class UserMapper {
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
                 .token(token)
+                .typeToken(tokenType)
                 .build();
     }
     public UserDTO toUserDTO (UsersEntity usersEntity){

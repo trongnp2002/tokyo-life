@@ -31,6 +31,7 @@ public class UserDTO {
     private String token;
     private String country;
     private List<String> roles;
+    private String typeToken;
 
     @Getter
     @AllArgsConstructor

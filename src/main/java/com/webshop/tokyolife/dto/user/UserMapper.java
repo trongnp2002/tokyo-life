@@ -22,8 +22,8 @@ public class UserMapper {
     private String tokenType;
 
     public UserDTO toUserDTO(UsersEntity usersEntity, AddressEntity addressEntity) {
-        List<String> roles = new ArrayList<>();
-        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
+        List<Integer> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getRoleId()));
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
                 .UUID(usersEntity.getUuid().toString())
@@ -34,14 +34,13 @@ public class UserMapper {
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
                 .roles(roles)
-                .token(null)
                 .build();
     }
 
     public UserDTO toUserDTO(UsersEntity usersEntity, String token) {
         AddressEntity addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId()).get();
-        List<String> roles = new ArrayList<>();
-        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
+        List<Integer> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getRoleId()));
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
                 .roles(roles)
@@ -52,15 +51,13 @@ public class UserMapper {
                 .firstName(addressEntity.getFirstName())
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
-                .token(token)
-                .typeToken(tokenType)
                 .build();
     }
 
     public UserDTO toUserDTO(UsersEntity usersEntity) {
         AddressEntity addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId()).get();
-        List<String> roles = new ArrayList<>();
-        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getName()));
+        List<Integer> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getRoleId()));
 
         return UserDTO.builder()
                 .email(usersEntity.getEmail())
@@ -72,7 +69,6 @@ public class UserMapper {
                 .lastName(addressEntity.getLastName())
                 .phone(addressEntity.getPhone())
                 .roles(roles)
-                .token(null)
                 .build();
     }
 
@@ -90,6 +86,21 @@ public class UserMapper {
         userRoles.add(roleUser);
         usersEntity.setRoles(userRoles);
         return usersEntity;
+    }
+
+
+    public UserDTO.LoginResponseDTO toLoginResponse(UsersEntity usersEntity, String token) {
+        AddressEntity addressEntity = addressRepository.findByUserIdAndIsDefaultTrue(usersEntity.getUserId()).get();
+        List<Integer> roles = new ArrayList<>();
+        usersEntity.getRoles().forEach(rolesEntity -> roles.add(rolesEntity.getRoleId()));
+        return UserDTO.LoginResponseDTO.builder()
+                .email(usersEntity.getEmail())
+                .roles(roles)
+                .UUID(usersEntity.getUuid().toString())
+                .phone(addressEntity.getPhone())
+                .token(token)
+                .typeToken(tokenType)
+                .build();
     }
 
 }

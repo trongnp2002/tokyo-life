@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
-    public UserDTO login(UserDTO.Login userLogin) throws CustomNotFoundException {
+    public UserDTO.LoginResponseDTO login(UserDTO.Login userLogin) throws CustomNotFoundException {
         Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(userLogin.getEmail());
         if(usersEntityOptional.isPresent() ){
             UsersEntity usersEntity = usersEntityOptional.get();
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
             if(usersEntity.getLocked()){
                 throw new CustomAccessDeniedException(new CustomError("MSG_LOGIN_FAIL","Tài khoản của bạn đã bị khóa do vượt quá số lần thử mật khẩu, vui lòng thử lại sau 24h"));
             }
-            return userMapper.toUserDTO(usersEntity,jwtTokenUtils.generateToken(usersEntity));
+            return userMapper.toLoginResponse(usersEntity,jwtTokenUtils.generateToken(usersEntity));
         }
         throw new CustomNotFoundException(new CustomError("MSG_LOGIN_FAIL","Tài khoản hoặc mật khẩu không chính xác"));
     }

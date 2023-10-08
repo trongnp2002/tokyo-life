@@ -28,10 +28,8 @@ public class UserDTO {
     private String company;
     private String address;
     private String phone;
-    private String token;
     private String country;
-    private List<String> roles;
-    private String typeToken;
+    private List<Integer> roles;
 
     @Getter
     @AllArgsConstructor
@@ -73,6 +71,20 @@ public class UserDTO {
         @NotBlank
         private String password;
     }
-
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @JsonTypeName("user")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
+    public static class LoginResponseDTO {
+        private String UUID;
+        private String email;
+        private String phone;
+        private String typeToken;
+        private String token;
+        private List<Integer> roles;
+    }
 
 }

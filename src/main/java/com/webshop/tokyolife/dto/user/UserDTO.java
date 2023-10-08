@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserDTO {
     @Builder
     @JsonTypeName("user")
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
-    public static class Register{
+    public static class Register implements Serializable {
         @NotBlank(message = "Phải điền đầy đủ họ và tên")
         private String firstName;
         @NotBlank(message = "Phải điền đầy đủ họ và tên")

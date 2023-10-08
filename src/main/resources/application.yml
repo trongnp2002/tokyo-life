@@ -9,6 +9,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
 logging:
   level:
     org:
@@ -21,6 +25,9 @@ jwt:
     my-secret-key: "ADONIS_2002@"
     expired: 86400
     name: "Bearer"
+
+authResponse:
+  key: "dsadfsadfsadssds"
 
 error:
   status:

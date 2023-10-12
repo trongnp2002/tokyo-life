@@ -34,12 +34,18 @@ public class AuthController extends BaseController{
 
         return response(new ResponseDTO(201,createSuccessStatus,"Đăng kí tài khoản thành công",authService.register(registerRequestDTO)));
     }
-    @ApiOperation("Đăng kí")
-    @GetMapping(value = "/otp")
+    @ApiOperation("Xác thực OTP")
+    @GetMapping(value = "/otp/verify")
     public ResponseEntity<?> verify(@RequestParam(name = "base64") String base64, @RequestParam(name = "otp") String otp) throws Exception {
         authService.verifyOTP(base64,otp);
         return response(new ResponseDTO(201,createSuccessStatus,"Xác thực mã OTP thành công", null));
     }
 
+    @ApiOperation("Xác thực OTP")
+    @GetMapping(value = "/otp/resend")
+    public ResponseEntity<?> resend(@RequestParam(name="email") String email) throws Exception {
+        authService.resendOTP(email);
+        return response(new ResponseDTO(201,createSuccessStatus,"Gửi lại mã OTP thành công", null));
+    }
 
 }

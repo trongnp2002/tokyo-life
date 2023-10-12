@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/otp/*").permitAll()
                 .antMatchers("/api/*").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

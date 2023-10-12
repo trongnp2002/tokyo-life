@@ -9,4 +9,6 @@ public interface AuthService {
     public String register(UserDTO.Register registerRequestDTO) throws Exception;
 
     void verifyOTP(String base64, String otp);
+
+    void resendOTP(String email) throws Exception;
 }

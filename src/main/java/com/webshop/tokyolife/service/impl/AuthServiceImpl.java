@@ -26,6 +26,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
@@ -62,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String register(UserDTO.Register registerRequestDTO) throws CustomBadRequestException {
+        userRepository.delete(userRepository.findByEmail("trongnphe163170@fpt.edu.vn").get());
         Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(registerRequestDTO.getEmail());
         if (usersEntityOptional.isPresent()) {
             throw new CustomBadRequestException(new CustomError("Email đã tồn tại."));
@@ -99,6 +101,11 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
+    @Override
+    public void resendOTP(String email) throws Exception {
+        sendOTP(email, AuthResponActionEnum.REGISTER.getValue());
+    }
+
     private void createUser(UserDTO.Register register) {
         UsersEntity userDTO = userMapper.toUserEntity(register);
         userRepository.save(userDTO);
@@ -109,9 +116,14 @@ public class AuthServiceImpl implements AuthService {
         String code = String.valueOf(NumberUtils.getRandomInt(100000, 999999));
         OTP otp = otpRepository.findByEmail(email);
         if (otp != null) {
+            LocalDateTime localDateTimeNow = LocalDateTime.now();
+            Duration duration = Duration.between(otp.getCreatedAt(), localDateTimeNow);
+            if (duration.toMinutes() < 1) {
+                throw new CustomBadRequestException(new CustomError("OTP_EXPRIED", "OTP hiện tại của bạn chưa hết hạn, chưa cần gửi lại"));
+            }
             otp.setCreatedAt(LocalDateTime.now());
         } else {
-           otp =  OTP.builder().build();
+            otp = OTP.builder().build();
         }
         otp.setEmail(email);
         otp.setCode(code);

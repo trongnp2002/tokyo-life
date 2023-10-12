@@ -63,7 +63,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String register(UserDTO.Register registerRequestDTO) throws CustomBadRequestException {
-        userRepository.delete(userRepository.findByEmail("trongnphe163170@fpt.edu.vn").get());
         Optional<UsersEntity> usersEntityOptional = userRepository.findByEmail(registerRequestDTO.getEmail());
         if (usersEntityOptional.isPresent()) {
             throw new CustomBadRequestException(new CustomError("Email đã tồn tại."));
